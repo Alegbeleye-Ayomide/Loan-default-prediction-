@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Loan Default Prediction
 
 Predicting whether a borrower will experience serious financial distress (90+ days past due) within two years, using the Kaggle **Give Me Some Credit** dataset. The project compares logistic regression, random forest and XGBoost, tunes them with cross-validation, chooses a decision threshold from a recall target, and evaluates the final model once on a held-out test set.
