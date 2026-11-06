@@ -94,7 +94,3 @@ python, pandas, NumPy, scikit-learn, imbalanced-learn, XGBoost, matplotlib, seab
 
 **Alegbeleye Ayomide**: Computer Engineering student & ML engineer
 [GitHub](https://github.com/Alegbeleye-Ayomide) · [LinkedIn](https://www.linkedin.com/in/alegbeleye-ayomide-b74a13394/)
-=======
-# Loan-default-prediction-
-This is a machine learning pipeline of a loan default prediction project
->>>>>>> ca3d806be67eb2e7fc0e210b9f92d66be294adea
