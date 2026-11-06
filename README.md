@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Loan Default Prediction
 
 Predicting whether a borrower will experience serious financial distress (90+ days past due) within two years, using the Kaggle **Give Me Some Credit** dataset. The project compares logistic regression, random forest and XGBoost, tunes them with cross-validation, chooses a decision threshold from a recall target, and evaluates the final model once on a held-out test set.
@@ -93,3 +94,7 @@ python, pandas, NumPy, scikit-learn, imbalanced-learn, XGBoost, matplotlib, seab
 
 **Alegbeleye Ayomide**: Computer Engineering student & ML engineer
 [GitHub](https://github.com/Alegbeleye-Ayomide) · [LinkedIn](https://www.linkedin.com/in/alegbeleye-ayomide-b74a13394/)
+=======
+# Loan-default-prediction-
+This is a machine learning pipeline of a loan default prediction project
+>>>>>>> ca3d806be67eb2e7fc0e210b9f92d66be294adea
