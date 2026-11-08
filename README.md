@@ -45,7 +45,7 @@ After tuning, XGBoost (0.8579) and random forest (0.8573) are effectively tied o
 ## Key findings
 
 - `DelinquencyScore` and `RevolvingUtilizationOfUnsecuredLines` are the most influential features for the XGBoost model.
-- Tuning barely helped logistic regression (it plateaus for `C` above about 10) but helped random forest a lot, since the default unlimited depth overfits.
+- Tuning barely helped logistic regression but helped random forest a lot.
 - Comparing models at a fixed 0.5 threshold is misleading, because each model's probabilities sit in a different range after SMOTE. Comparing precision at the same recall is fairer.
 
 ## Repository contents
@@ -53,7 +53,10 @@ After tuning, XGBoost (0.8579) and random forest (0.8573) are effectively tied o
 | File | Description |
 |---|---|
 | `loan_default_prediction.ipynb` | Full analysis: EDA, cleaning, modelling, tuning, threshold selection, evaluation |
-| `loan_model.pkl` | Saved XGBoost pipeline, decision threshold and feature columns |
+| `preprocess.py` | Cleaning and feature functions that turn raw applicant data into model inputs |
+| `loan_model.pkl` | Saved XGBoost pipeline, decision threshold, feature columns and the values learned for cleaning (median fills, IQR bounds, column lists) |
+| `requirements.txt` | Python dependencies with versions |
+| `.gitignore` | Excludes the dataset and notebook checkpoints |
 | `README.md` | This file |
 
 ## How to run
@@ -62,32 +65,36 @@ After tuning, XGBoost (0.8579) and random forest (0.8573) are effectively tied o
 pip install -r requirements.txt
 ```
 
-Download the dataset from Kaggle (Give Me Some Credit) and update the data path in the first cells of the notebook.
+Download `cs-training.csv` from the Give Me Some Credit competition on Kaggle and place it in the repository root (or update the data path in the first cells of the notebook).
 
 ## Using the saved model
+
+The pickle stores the model and the values learned from the training set. The cleaning itself is done by `preprocess.py`, so raw data must go through `preprocess` before it reaches the model.
 
 ```python
 import joblib
 import pandas as pd
+from preprocess import preprocess
 
 saved = joblib.load('loan_model.pkl')
 
-# new_data must have the same columns as training and be cleaned the same way
-proba = saved['model'].predict_proba(new_data[saved['feature_columns']])[:, 1]
+raw = pd.read_csv('new_applicants.csv')   # same columns as the original dataset, without the target
+
+X = preprocess(raw, saved['fill_values'], saved['bounds'],
+               saved['fill_cols'], saved['log_cols'], saved['drop_cols'])[saved['feature_columns']]
+
+proba = saved['model'].predict_proba(X)[:, 1]
 flagged = (proba >= saved['threshold']).astype(int)
 ```
 
-
-
 ## Limitations
-
-- **Cleaning is outside the pipeline.** The saved model contains the scaler, SMOTE and XGBoost, but not the cleaning and feature steps, so new data must be cleaned the same way before prediction.
 - **The recall target is assumed.** A real deployment would choose the threshold from the actual costs of missed defaulters and wrongly rejected borrowers.
 - **Single train/test split and seed.** Differences of a few thousandths in ROC AUC between models are within noise.
+- **SMOTE was not compared against alternatives** such as class weights, which often work as well for tree models.
 
 ## Tech stack
 
-python, pandas, NumPy, scikit-learn, imbalanced-learn, XGBoost, matplotlib, seaborn, joblib.
+Python, pandas, NumPy, scikit-learn, imbalanced-learn, XGBoost, matplotlib, seaborn, joblib.
 
 ## Author
 
